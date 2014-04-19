@@ -8,10 +8,7 @@ import com.fasterxml.jackson.module.scala.DefaultScalaModule
 /**
   * Created by psy on 19.04.14.
   */
-class ElasticSearchTweetRepository(private val elasticSearchClient: Client) {
-
-  private val objectMapper: ObjectMapper = new ObjectMapper
-  objectMapper.registerModule(DefaultScalaModule)
+class ElasticSearchTweetRepository(private val client: Client, private val objectMapper: ObjectMapper) {
 
   val index = "twitter"
   val typee = "tweet"
@@ -20,10 +17,22 @@ class ElasticSearchTweetRepository(private val elasticSearchClient: Client) {
 
      val json = objectMapper.writeValueAsString(tweet)
 
-     elasticSearchClient.prepareIndex(index, typee)
+     client.prepareIndex(index, typee)
        .setId("" + tweet.id)
        .setSource(json).execute().actionGet()
 
    }
+
+  def getTweets(): Seq[Tweet] = {
+
+    val response = client.prepareSearch(index).setTypes(typee).execute().actionGet()
+
+    val tweets = response.getHits().getHits.map(
+      hit => objectMapper.readValue(hit.getSourceAsString, classOf[Tweet])
+    ).toList
+
+    tweets
+
+  }
 
  }

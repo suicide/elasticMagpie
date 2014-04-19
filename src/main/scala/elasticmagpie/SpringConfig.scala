@@ -12,6 +12,9 @@ import org.elasticsearch.client.Client
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.common.transport.InetSocketTransportAddress
 import elasticmagpie.elasticsearch.ElasticSearchTweetRepository
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
+import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter
 
 /**
  * Created by psy on 19.04.14.
@@ -20,10 +23,18 @@ import elasticmagpie.elasticsearch.ElasticSearchTweetRepository
 @EnableAutoConfiguration
 @ComponentScan
 //@PropertySource(value = Array("classpath:/default-application.properties", "classpath:/application.properties"))
-class SpringConfig extends InitializingBean {
+class SpringConfig extends WebMvcAutoConfigurationAdapter with InitializingBean {
 
   @Autowired
   var springEnv: Environment = null
+
+  @Bean
+  @Primary
+  def jacksonObjectMapper(): ObjectMapper = {
+    new ObjectMapper() {
+      registerModule(DefaultScalaModule)
+    }
+  }
 
   @Bean
   def elasticSearchClient(): Client = {
@@ -32,13 +43,15 @@ class SpringConfig extends InitializingBean {
 
   @Bean
   def elasticSearchTweetRepository(): ElasticSearchTweetRepository = {
-    new ElasticSearchTweetRepository(elasticSearchClient())
+    new ElasticSearchTweetRepository(elasticSearchClient(), jacksonObjectMapper())
   }
 
   @Bean
   def statusListener(): StatusListener = {
     new SimpleStatusListener(elasticSearchTweetRepository())
   }
+
+
 
   override def afterPropertiesSet(): Unit = {
 
