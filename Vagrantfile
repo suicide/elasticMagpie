@@ -18,12 +18,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     v.memory = 2048
     v.cpus = 2
   end
-  #config.vm.provision "shell" do |s|
-  #  s.inline = "wget -O - http://packages.elasticsearch.org/GPG-KEY-elasticsearch | sudo apt-key add -"
-  #  s.inline = "sudo sh -c \"echo 'deb http://packages.elasticsearch.org/elasticsearch/1.1/debian stable main' >> /etc/apt/sources.list\""
-  #  s.inline = "sudo apt-get update"
-  #  s.inline = "sudo apt-get -y install openjdk-7-jdk"
-  #  s.inline = "sudo apt-get -y install elasticsearch"
-  #end
-  config.vm.provision "shell", inline: $script  
+  config.vm.provision "shell", inline: $script
 end
