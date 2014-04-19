@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired
 class TweetController {
 
   @Autowired
-  private val tweetRepository: ElasticSearchTweetRepository = null
+  private var tweetRepository: ElasticSearchTweetRepository = _
 
   @RequestMapping(Array("/tweets"))
   @ResponseBody

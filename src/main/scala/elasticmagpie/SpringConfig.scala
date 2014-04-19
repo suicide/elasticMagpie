@@ -26,7 +26,7 @@ import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration.WebMvc
 class SpringConfig extends WebMvcAutoConfigurationAdapter with InitializingBean {
 
   @Autowired
-  var springEnv: Environment = null
+  var springEnv: Environment = _
 
   @Bean
   @Primary
