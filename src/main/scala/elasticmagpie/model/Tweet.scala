@@ -7,14 +7,14 @@ import java.util.Date
  */
 class Tweet {
 
-  var id: String = null
+  var id: String = _
 
-  var text: String = null
+  var text: String = _
 
-  var user: String = null
+  var user: String = _
 
-  var hashtags: Seq[String] = null
+  var hashtags: Seq[String] = _
 
-  var createdAt: Date = null
+  var createdAt: Date = _
 
 }
