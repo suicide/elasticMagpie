@@ -4,6 +4,8 @@ import elasticmagpie.model.Tweet
 import org.elasticsearch.client.Client
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
+import org.elasticsearch.index.query.{QueryBuilders, QueryBuilder}
+import org.elasticsearch.search.sort.{SortOrder, SortBuilders}
 
 /**
   * Created by psy on 19.04.14.
@@ -23,9 +25,12 @@ class ElasticSearchTweetRepository(private val client: Client, private val objec
 
    }
 
-  def getTweets(): Seq[Tweet] = {
+  def getTweets(searchText: String): Seq[Tweet] = {
 
-    val response = client.prepareSearch(index).setTypes(typee).execute().actionGet()
+    val response = client.prepareSearch(index).setTypes(typee)
+      .setQuery(QueryBuilders.matchQuery("text", searchText))
+      .addSort(SortBuilders.fieldSort("createdAt").order(SortOrder.DESC))
+      .execute().actionGet()
 
     val tweets = response.getHits().getHits.map(
       hit => objectMapper.readValue(hit.getSourceAsString, classOf[Tweet])

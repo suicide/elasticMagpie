@@ -15,6 +15,7 @@ class StatusTweetMapper {
     tweet.text = status.getText
     tweet.user = status.getUser.getScreenName
     tweet.hashtags = status.getHashtagEntities.map(_.getText).toList
+    tweet.createdAt = status.getCreatedAt
 
     tweet
   }
