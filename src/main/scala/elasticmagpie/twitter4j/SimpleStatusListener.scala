@@ -1,15 +1,12 @@
 package elasticmagpie.twitter4j
 
 import twitter4j._
-import org.elasticsearch.client.Client
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import elasticmagpie.elasticsearch.ElasticSearchTweetRepository
+import elasticmagpie.elasticsearch.TweetRepository
 
 /**
  * Created by psy on 19.04.14.
  */
-class SimpleStatusListener(private val elasticSearchTweetRepository: ElasticSearchTweetRepository) extends StatusListener {
+class SimpleStatusListener(private val elasticSearchTweetRepository: TweetRepository) extends StatusListener {
 
   private val statusMapper: StatusTweetMapper = new StatusTweetMapper
 
