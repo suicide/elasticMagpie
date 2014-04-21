@@ -5,7 +5,7 @@ import _root_.twitter4j.{TwitterStreamFactory, StatusListener}
 import org.springframework.context.annotation._
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.beans.factory.InitializingBean
-import elasticmagpie.twitter4j.SimpleStatusListener
+import elasticmagpie.twitter4j.{TwitterConnection, SimpleStatusListener}
 import org.springframework.core.env.Environment
 import org.springframework.beans.factory.annotation.Autowired
 import org.elasticsearch.client.Client
@@ -56,9 +56,8 @@ class SpringConfig extends WebMvcAutoConfigurationAdapter with InitializingBean 
     new SimpleStatusListener(elasticSearchTweetRepository())
   }
 
-
-
-  override def afterPropertiesSet(): Unit = {
+  @Bean(initMethod = "connect", destroyMethod = "disconnect")
+  def twitterConnection(): TwitterConnection = {
 
     val configurationBuilder = new ConfigurationBuilder
     configurationBuilder.setJSONStoreEnabled(true)
@@ -67,10 +66,12 @@ class SpringConfig extends WebMvcAutoConfigurationAdapter with InitializingBean 
     configurationBuilder.setOAuthAccessToken(springEnv.getRequiredProperty("twitter.accessToken"))
     configurationBuilder.setOAuthAccessTokenSecret(springEnv.getRequiredProperty("twitter.accessTokenSecret"))
 
-    val stream = new TwitterStreamFactory(configurationBuilder.build()).getInstance()
+    new TwitterConnection(configurationBuilder.build(), statusListener())
+  }
 
-    stream.addListener(statusListener())
 
-    stream.sample()
+
+  override def afterPropertiesSet(): Unit = {
+
   }
 }

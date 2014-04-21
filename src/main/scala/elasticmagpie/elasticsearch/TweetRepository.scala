@@ -29,13 +29,15 @@ class TweetRepository(private val client: Client, private val objectMapper: Obje
 
     val query = QueryBuilders.boolQuery()
 
-    if (accounts != null && !accounts.isEmpty) {
-      query.must(QueryBuilders.inQuery("user", JavaConversions.seqAsJavaList(accounts.map(_.toLowerCase).toList)))
+    def inQuery = (seq: Seq[String], field: String) => {
+      if (seq != null && !seq.isEmpty) {
+        // ES needs this lower case hack, because index is lower case
+        query.must(QueryBuilders.inQuery(field, JavaConversions.seqAsJavaList(seq.map(_.toLowerCase).toList)))
+      }
     }
 
-    if (hashtags != null && !hashtags.isEmpty) {
-      query.must(QueryBuilders.inQuery("hashtags", JavaConversions.seqAsJavaList(hashtags.map(_.toLowerCase).toList)))
-    }
+    inQuery(accounts, "user")
+    inQuery(hashtags, "hashtags")
 
     val response = client.prepareSearch(index).setTypes(typee)
       .setQuery(query)
