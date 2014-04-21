@@ -1,11 +1,12 @@
 package elasticmagpie.web
 
 import org.springframework.stereotype.Controller
-import elasticmagpie.model.Tweet
-import elasticmagpie.elasticsearch.TweetRepository
+import elasticmagpie.model.{SearchQuery, Tweet}
+import elasticmagpie.elasticsearch.{SearchQueryRepository, TweetRepository}
 import org.springframework.web.bind.annotation.{RequestParam, ResponseStatus, ResponseBody, RequestMapping}
 import org.springframework.http.HttpStatus
 import org.springframework.beans.factory.annotation.Autowired
+import java.util.Date
 
 /**
  * Created by psy on 19.04.14.
@@ -15,6 +16,9 @@ class TweetController {
 
   @Autowired
   var tweetRepository: TweetRepository = _
+
+  @Autowired
+  var searchQueryRepository: SearchQueryRepository = _
 
   @RequestMapping(Array("/tweets"))
   @ResponseBody
@@ -33,6 +37,19 @@ class TweetController {
     if (accounts != null) {
       accountList = accounts.split(",").map(s => s).toList
     }
+
+    val searchQuery = new SearchQuery
+    searchQuery.accounts = accountList
+    searchQuery.hashtags = hashtagList
+    searchQuery.createdAt = new Date
+
+    val queries = searchQueryRepository.findAll()
+
+    if (!queries.contains(searchQuery)) {
+      searchQueryRepository.store(searchQuery)
+    }
+
+
 
     tweetRepository.getTweets(accountList, hashtagList)
 

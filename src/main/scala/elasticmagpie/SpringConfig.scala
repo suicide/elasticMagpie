@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.elasticsearch.client.Client
 import org.elasticsearch.client.transport.TransportClient
 import org.elasticsearch.common.transport.InetSocketTransportAddress
-import elasticmagpie.elasticsearch.TweetRepository
+import elasticmagpie.elasticsearch.{SearchQueryRepository, TweetRepository}
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter
@@ -44,6 +44,11 @@ class SpringConfig extends WebMvcAutoConfigurationAdapter with InitializingBean 
   @Bean
   def elasticSearchTweetRepository(): TweetRepository = {
     new TweetRepository(elasticSearchClient(), jacksonObjectMapper())
+  }
+
+  @Bean
+  def searchQueryRepository(): SearchQueryRepository = {
+    new SearchQueryRepository(elasticSearchClient(), jacksonObjectMapper())
   }
 
   @Bean

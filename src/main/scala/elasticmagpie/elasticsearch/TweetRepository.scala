@@ -30,11 +30,11 @@ class TweetRepository(private val client: Client, private val objectMapper: Obje
     val query = QueryBuilders.boolQuery()
 
     if (accounts != null && !accounts.isEmpty) {
-      query.must(QueryBuilders.inQuery("user", JavaConversions.seqAsJavaList(accounts)))
+      query.must(QueryBuilders.inQuery("user", JavaConversions.seqAsJavaList(accounts.map(_.toLowerCase).toList)))
     }
 
     if (hashtags != null && !hashtags.isEmpty) {
-      query.must(QueryBuilders.inQuery("hashtags", JavaConversions.seqAsJavaList(hashtags)))
+      query.must(QueryBuilders.inQuery("hashtags", JavaConversions.seqAsJavaList(hashtags.map(_.toLowerCase).toList)))
     }
 
     val response = client.prepareSearch(index).setTypes(typee)
