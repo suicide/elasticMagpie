@@ -66,7 +66,7 @@ class SpringConfig extends WebMvcAutoConfigurationAdapter with InitializingBean 
     configurationBuilder.setOAuthAccessToken(springEnv.getRequiredProperty("twitter.accessToken"))
     configurationBuilder.setOAuthAccessTokenSecret(springEnv.getRequiredProperty("twitter.accessTokenSecret"))
 
-    new TwitterConnection(configurationBuilder.build(), statusListener())
+    new TwitterConnection(configurationBuilder.build(), statusListener(), searchQueryRepository())
   }
 
 
