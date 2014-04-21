@@ -7,8 +7,6 @@ version = '1.0'
 sourceCompatibility = 1.7
 
 ext {
-    springVersion = '4.0.1.RELEASE'
-    springGroup = 'org.springframework'
 
 }
 
