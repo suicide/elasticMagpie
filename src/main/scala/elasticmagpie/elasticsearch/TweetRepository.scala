@@ -12,44 +12,44 @@ import scala.collection.JavaConversions
   */
 class TweetRepository(private val client: Client, private val objectMapper: ObjectMapper) {
 
-  val index = "twitter"
-  val typee = "tweet"
-
    def storeTweet(tweet: Tweet) = {
 
      val json = objectMapper.writeValueAsString(tweet)
 
-     client.prepareIndex(index, typee)
+     client.prepareIndex(TweetRepository.index, TweetRepository.index)
        .setId("" + tweet.id)
        .setSource(json).execute().actionGet()
 
    }
 
-  def getTweets(accounts: Seq[String], hashtags: Seq[String]): Seq[Tweet] = {
+  def getTweets(accounts: Set[String], hashtags: Set[String]): Seq[Tweet] = {
 
     val query = QueryBuilders.boolQuery()
 
-    def inQuery = (seq: Seq[String], field: String) => {
-      if (seq != null && !seq.isEmpty) {
+    def inQuery = (set: Set[String], field: String) => {
+      if (set != null && !set.isEmpty) {
         // ES needs this lower case hack, because index is lower case
-        query.must(QueryBuilders.inQuery(field, JavaConversions.seqAsJavaList(seq.map(_.toLowerCase).toList)))
+        query.must(QueryBuilders.inQuery(field, JavaConversions.seqAsJavaList(set.map(_.toLowerCase).toList)))
       }
     }
 
     inQuery(accounts, "user")
     inQuery(hashtags, "hashtags")
 
-    val response = client.prepareSearch(index).setTypes(typee)
+    val response = client.prepareSearch(TweetRepository.index).setTypes(TweetRepository.index)
       .setQuery(query)
       .addSort(SortBuilders.fieldSort("createdAt").order(SortOrder.DESC))
       .execute().actionGet()
 
-    val tweets = response.getHits().getHits.map(
+    response.getHits().getHits.map(
       hit => objectMapper.readValue(hit.getSourceAsString, classOf[Tweet])
     ).toList
-
-    tweets
 
   }
 
  }
+
+object TweetRepository {
+  val index = "twitter"
+  val typee = "tweet"
+}

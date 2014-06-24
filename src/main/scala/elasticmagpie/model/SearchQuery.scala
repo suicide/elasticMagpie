@@ -7,14 +7,7 @@ import java.util.Date
  *
  * @author Patrick Sy (patrick.sy@get-it.us)
  */
-class SearchQuery {
-
-  var accounts: Seq[String] = _
-
-  var hashtags: Seq[String] = _
-
-  var createdAt: Date = _
-
+class SearchQuery(val accounts: Set[String], val hashtags: Set[String], val createdAt: Date) {
 
   def canEqual(other: Any): Boolean = other.isInstanceOf[SearchQuery]
 

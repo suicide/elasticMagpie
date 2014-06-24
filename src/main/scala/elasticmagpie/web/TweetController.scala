@@ -26,22 +26,19 @@ class TweetController {
   def tweets(@RequestParam(value = "accounts", required = false) accounts: String,
              @RequestParam(value = "hashtags", required = false) hashtags: String): Seq[Tweet] = {
 
-    var hashtagList: Seq[String] = null
+    var hashtagSet: Set[String] = null
 
     if (hashtags != null) {
-      hashtagList = hashtags.split(",").map(s => s).toList
+      hashtagSet = hashtags.split(",").map(s => s).toSet
     }
 
-    var accountList: Seq[String] = null
+    var accountSet: Set[String] = null
 
     if (accounts != null) {
-      accountList = accounts.split(",").map(s => s).toList
+      accountSet = accounts.split(",").map(s => s).toSet
     }
 
-    val searchQuery = new SearchQuery
-    searchQuery.accounts = accountList
-    searchQuery.hashtags = hashtagList
-    searchQuery.createdAt = new Date
+    val searchQuery = new SearchQuery(accountSet, hashtagSet, new Date())
 
     val queries = searchQueryRepository.findAll()
 
@@ -51,7 +48,7 @@ class TweetController {
 
 
 
-    tweetRepository.getTweets(accountList, hashtagList)
+    tweetRepository.getTweets(accountSet, hashtagSet)
 
   }
 

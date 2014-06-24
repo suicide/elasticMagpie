@@ -12,14 +12,10 @@ import org.elasticsearch.index.query.QueryBuilders
  */
 class SearchQueryRepository(private val client: Client, private val objectMapper: ObjectMapper) {
 
-  val index = "twitter"
-  val typee = "searchquery"
-  val maxResults = 1000
-
   def findAll(): Seq[SearchQuery] = {
-    val response = client.prepareSearch(index).setTypes(typee)
+    val response = client.prepareSearch(SearchQueryRepository.index).setTypes(SearchQueryRepository.typee)
     .setQuery(QueryBuilders.matchAllQuery())
-    .setSize(maxResults)
+    .setSize(SearchQueryRepository.maxResults)
     .execute().actionGet()
 
 
@@ -31,8 +27,14 @@ class SearchQueryRepository(private val client: Client, private val objectMapper
   def store(searchQuery: SearchQuery): Unit = {
     val json = objectMapper.writeValueAsString(searchQuery)
 
-    client.prepareIndex(index, typee)
+    client.prepareIndex(SearchQueryRepository.index, SearchQueryRepository.typee)
       .setSource(json).execute().actionGet()
   }
 
+}
+
+object SearchQueryRepository {
+  val index = "twitter"
+  val typee = "searchquery"
+  val maxResults = 1000
 }

@@ -9,15 +9,12 @@ import elasticmagpie.model.Tweet
 class StatusTweetMapper {
 
   def map(status: Status): Tweet = {
-    val tweet = new Tweet
+    new Tweet("" + status.getId,
+      status.getText,
+      status.getUser.getScreenName,
+      status.getHashtagEntities.map(_.getText).toSet,
+      status.getCreatedAt)
 
-    tweet.id = "" + status.getId
-    tweet.text = status.getText
-    tweet.user = status.getUser.getScreenName
-    tweet.hashtags = status.getHashtagEntities.map(_.getText).toList
-    tweet.createdAt = status.getCreatedAt
-
-    tweet
   }
 
 }
