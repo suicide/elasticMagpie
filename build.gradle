@@ -22,7 +22,7 @@ repositories {
 dependencies {
     compile group:'org.scala-lang', name:'scala-library', version:'2.11.1'
 
-    compile("org.springframework.boot:spring-boot-starter-web:1.1.1.RELEASE")
+    compile("org.springframework.boot:spring-boot-starter-web:1.1.2.RELEASE")
     compile("org.twitter4j:twitter4j-stream:4.0.1")
     compile("org.elasticsearch:elasticsearch:1.2.1")
     compile("com.fasterxml.jackson.core:jackson-databind:2.3.3")
