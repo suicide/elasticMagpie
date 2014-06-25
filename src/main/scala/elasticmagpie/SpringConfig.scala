@@ -2,10 +2,10 @@ package elasticmagpie
 
 import java.util.Date
 
-import _root_.twitter4j.conf.{ConfigurationBuilder, ConfigurationContext, ConfigurationFactory}
-import _root_.twitter4j.{TwitterStreamFactory, StatusListener}
+import _root_.twitter4j.conf.ConfigurationBuilder
+import _root_.twitter4j.StatusListener
 import elasticmagpie.model.SearchQuery
-import org.elasticsearch.action.admin.indices.create.{CreateIndexRequest, CreateIndexAction}
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequest
 import org.elasticsearch.indices.IndexAlreadyExistsException
 import org.springframework.context.annotation._
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration

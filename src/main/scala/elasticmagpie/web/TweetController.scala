@@ -29,13 +29,13 @@ class TweetController {
     var hashtagSet: Set[String] = null
 
     if (hashtags != null) {
-      hashtagSet = hashtags.split(",").map(s => s).toSet
+      hashtagSet = hashtags.split(",").toSet
     }
 
     var accountSet: Set[String] = null
 
     if (accounts != null) {
-      accountSet = accounts.split(",").map(s => s).toSet
+      accountSet = accounts.split(",").toSet
     }
 
     val searchQuery = new SearchQuery(accountSet, hashtagSet, new Date())
@@ -45,8 +45,6 @@ class TweetController {
     if (!queries.contains(searchQuery)) {
       searchQueryRepository.store(searchQuery)
     }
-
-
 
     tweetRepository.getTweets(accountSet, hashtagSet)
 
